@@ -108,7 +108,7 @@ class Viewer:
                             img = scaleToMaxSize(img, (DISPLAY_HEIGHT, DISPLAY_WIDTH))
 
                         cv2.imshow("viewer", img)
-                        key = cv2.waitKey(100)
+                        key = cv2.waitKey(1)
                         if key == ord("q"):
                             self.running = False
             else:
