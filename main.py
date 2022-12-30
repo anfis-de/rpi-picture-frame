@@ -5,7 +5,7 @@ import time
 # supported file formats
 IMG_FE = (".jpg", ".png", ".bmp", ".jpeg")
 # display resolution
-DISPLAY_HEIGHT, DISPLAY_WIDTH = 1280, 720
+DISPLAY_HEIGHT, DISPLAY_WIDTH = 1920, 1080
 # TIMEOUT
 T_OUT = 180
 # MAX FILES
