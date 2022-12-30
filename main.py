@@ -12,7 +12,7 @@ T_OUT = 180
 N_FILES = 60
 
 if os.name == "posix":
-    PATH_IMAGES = "~/dropbox"
+    PATH_IMAGES = "/home/pi/dropbox"
 else:
     PATH_IMAGES = "images"
 
