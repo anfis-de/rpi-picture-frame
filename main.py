@@ -65,12 +65,14 @@ class Viewer:
                     os.remove(file)
     
     def plus_idx(self):
+        self.sync_files()
         if self.file_idx < len(self.file_list)-1:
             self.file_idx += 1
         else:
             self.file_idx = 0
     
     def minus_idx(self):
+        self.sync_files()
         if self.file_idx > 0:
             self.file_idx -= 1
         else:
