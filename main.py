@@ -53,6 +53,7 @@ class Viewer:
         self.running = True
     
     def sync_files(self):
+        self.file_list = []
         for file in os.listdir(PATH_IMAGES):
             if file.endswith(IMG_FE): # if file endswith file extension
                 self.file_list.append(os.path.join(PATH_IMAGES, file)) # append file to list
