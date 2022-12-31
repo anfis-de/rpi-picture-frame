@@ -7,7 +7,7 @@ IMG_FE = (".jpg", ".png", ".bmp", ".jpeg")
 # display resolution
 DISPLAY_HEIGHT, DISPLAY_WIDTH = 1920, 1080
 # TIMEOUT
-T_OUT = 180
+T_OUT = 60
 # MAX FILES
 N_FILES = 60
 
