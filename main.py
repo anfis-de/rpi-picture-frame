@@ -41,7 +41,7 @@ def scaleToMaxSize(src_img, dst_size):
 
     height = (dst_size[1]-dst_img.shape[0])//2 if (dst_size[1]-dst_img.shape[0])//2 > 0 else 0 # calculate height of border
     width = (dst_size[0]-dst_img.shape[1])//2 if (dst_size[0]-dst_img.shape[1])//2 > 0 else 0 # calculate width of border
-    dst_img = cv2.copyMakeBorder(dst_img, height, height, width, width, 0) # add border to image
+    dst_img = cv2.copyMakeBorder(dst_img, height, height, width, width, borderType=cv2.BORDER_CONSTANT, value=0) # add border to image
         
     return dst_img
 
