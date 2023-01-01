@@ -4,8 +4,6 @@ import time
 
 # supported file formats
 IMG_FE = (".jpg", ".png", ".bmp", ".jpeg")
-# display resolution
-DISPLAY_HEIGHT, DISPLAY_WIDTH = 1920, 1080
 # TIMEOUT
 T_OUT = 60
 # MAX FILES
@@ -13,20 +11,12 @@ N_FILES = 60
 
 if os.name == "posix":
     PATH_IMAGES = "/home/pi/dropbox"
+    DISPLAY_HEIGHT, DISPLAY_WIDTH = 1920, 1080
 else:
     PATH_IMAGES = "images"
+    DISPLAY_HEIGHT, DISPLAY_WIDTH = 1280, 720
 
 def scaleToMaxSize(src_img, dst_size):
-    """scale image to needed size
-        
-    Args:
-        <np array> cv_img
-        <tuple> dst_size (w, h)
-    Returns:
-        <np array> cv_img
-    Last changed: 11.07.2022, AF
-        updated
-    """
     img_h, img_w, elem_h, elem_w = src_img.shape[0], src_img.shape[1], dst_size[1], dst_size[0] # extract dimensions
     img_r, elem_r = img_w/img_h, elem_w/elem_h # calculate ratios
     if img_r == elem_r: # if ratio is same
@@ -41,7 +31,7 @@ def scaleToMaxSize(src_img, dst_size):
 
     height = (dst_size[1]-dst_img.shape[0])//2 if (dst_size[1]-dst_img.shape[0])//2 > 0 else 0 # calculate height of border
     width = (dst_size[0]-dst_img.shape[1])//2 if (dst_size[0]-dst_img.shape[1])//2 > 0 else 0 # calculate width of border
-    dst_img = cv2.copyMakeBorder(dst_img, height, height, width, width, cv2.BORDER_CONSTANT, value=[0, 0, 0]) # add border to image
+    dst_img = cv2.copyMakeBorder(dst_img, height, height, width, width, cv2.BORDER_CONSTANT, None, value=0) # add border to image
         
     return dst_img
 
