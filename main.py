@@ -48,22 +48,23 @@ class Viewer:
             if file.endswith(IMG_FE): # if file endswith file extension
                 self.file_list.append(os.path.join(PATH_IMAGES, file)) # append file to list
         
-        self.file_list.sort(key=lambda x: os.path.getmtime(x))
+        self.file_list.sort(key=lambda x: os.path.getmtime(x)) # sort list by date
 
         if len(self.file_list)-1 >= N_FILES:
             for file in self.file_list[N_FILES:]:
                 if os.path.exists(file):
                     os.remove(file)
+
+        self.file_list.reverse() # bring latest files to the front
     
     def plus_idx(self):
-        self.sync_files()
         if self.file_idx < len(self.file_list)-1:
             self.file_idx += 1
         else:
             self.file_idx = 0
+            self.sync_files()
     
     def minus_idx(self):
-        self.sync_files()
         if self.file_idx > 0:
             self.file_idx -= 1
         else:
@@ -95,15 +96,19 @@ class Viewer:
                 if len(self.file_list) > 0:
                     file = self.file_list[self.file_idx]
                     if file.endswith(IMG_FE): # file ends with image file extension and therefore is image
-                        img = cv2.imread(file, cv2.IMREAD_COLOR) # read image
+                        if os.path.exists(file):
+                            img = cv2.imread(file, cv2.IMREAD_COLOR) # read image
 
-                        if img.shape[0]!= DISPLAY_HEIGHT or img.shape[1]!= DISPLAY_WIDTH:
-                            img = scaleToMaxSize(img, (DISPLAY_HEIGHT, DISPLAY_WIDTH))
+                            if img.shape[0]!= DISPLAY_HEIGHT or img.shape[1]!= DISPLAY_WIDTH:
+                                img = scaleToMaxSize(img, (DISPLAY_HEIGHT, DISPLAY_WIDTH))
 
-                        cv2.imshow("viewer", img)
-                        key = cv2.waitKey(1)
-                        if key == ord("q"):
-                            self.running = False
+                            cv2.imshow("viewer", img)
+                            key = cv2.waitKey(1)
+                            if key == ord("q"):
+                                self.running = False
+                        else:
+                            self.sync_files()
+                            self.file_idx = 0
             else:
                 self.plus_idx()
                 self.ts = time.time()
