@@ -10,10 +10,10 @@ T_OUT = 60
 N_FILES = 60
 
 if os.name == "posix":
-    PATH_IMAGES = "/home/pi/dropbox"
+    PATH = "/home/pi/dropbox"
     DISPLAY_HEIGHT, DISPLAY_WIDTH = 1920, 1080
 else:
-    PATH_IMAGES = "images"
+    PATH = "images"
     DISPLAY_HEIGHT, DISPLAY_WIDTH = 1280, 720
 
 def scaleToMaxSize(src_img, dst_size):
@@ -44,12 +44,20 @@ class Viewer:
     
     def sync_files(self):
         self.file_list = []
-        for file in os.listdir(PATH_IMAGES):
-            if file.endswith(IMG_FE): # if file endswith file extension
-                self.file_list.append(os.path.join(PATH_IMAGES, file)) # append file to list
+        for elem in os.listdir(PATH):
+            path = os.path.join(PATH, elem)
+            if path.endswith(IMG_FE): # if file endswith file extension
+                self.file_list.append(os.path.join(PATH, file)) # append file to list
+            elif os.path.isdir(path):
+                for file in path:
+                    if file.endswith(IMG_FE):
+                        self.file_list.append(os.path.join(PATH, file)) # append file to list
+            else:
+                pass
         
         self.file_list.sort(key=lambda x: os.path.getmtime(x))
 
+    def delete_files(self):
         if len(self.file_list)-1 >= N_FILES:
             for file in self.file_list[N_FILES:]:
                 if os.path.exists(file):
