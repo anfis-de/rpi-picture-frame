@@ -6,15 +6,14 @@ import time
 IMG_FE = (".jpg", ".png", ".bmp", ".jpeg")
 # TIMEOUT
 T_OUT = 60
-# MAX FILES
-N_FILES = 60
 
 if os.name == "posix":
     PATH = "/home/pi/dropbox"
-    DISPLAY_HEIGHT, DISPLAY_WIDTH = 1920, 1080
+    DISPLAY_WIDTH, DISPLAY_HEIGHT = 1920, 1080
+    os.system("rclone sync -v dropbox:digitalerBilderrahmen /home/pi/dropbox")
 else:
     PATH = "images"
-    DISPLAY_HEIGHT, DISPLAY_WIDTH = 1280, 720
+    DISPLAY_WIDTH, DISPLAY_HEIGHT = 1280, 720
 
 def scaleToMaxSize(src_img, dst_size):
     img_h, img_w, elem_h, elem_w = src_img.shape[0], src_img.shape[1], dst_size[1], dst_size[0] # extract dimensions
@@ -47,23 +46,13 @@ class Viewer:
         for elem in os.listdir(PATH):
             path = os.path.join(PATH, elem)
             if path.endswith(IMG_FE): # if file endswith file extension
-                self.file_list.append(os.path.join(PATH, file)) # append file to list
+                self.file_list.append(path) # append file to list
             elif os.path.isdir(path):
-                for file in path:
+                for file in os.listdir(path):
                     if file.endswith(IMG_FE):
-                        self.file_list.append(os.path.join(PATH, file)) # append file to list
+                        self.file_list.append(os.path.join(path, file)) # append file to list
             else:
                 pass
-        
-        self.file_list.sort(key=lambda x: os.path.getmtime(x)) # sort list by date
-
-    def delete_files(self):
-        if len(self.file_list)-1 >= N_FILES:
-            for file in self.file_list[N_FILES:]:
-                if os.path.exists(file):
-                    os.remove(file)
-
-        self.file_list.reverse() # bring latest files to the front
     
     def plus_idx(self):
         if self.file_idx < len(self.file_list)-1:
@@ -92,7 +81,7 @@ class Viewer:
             cv2.setWindowProperty("viewer", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN) # display window in full screen
         else:
             cv2.namedWindow("viewer")
-
+        cv2.resizeWindow("viewer", DISPLAY_WIDTH, DISPLAY_HEIGHT)
         cv2.setMouseCallback("viewer", self.on_touch)
 
         self.sync_files()
@@ -108,7 +97,7 @@ class Viewer:
                             img = cv2.imread(file, cv2.IMREAD_COLOR) # read image
 
                             if img.shape[0]!= DISPLAY_HEIGHT or img.shape[1]!= DISPLAY_WIDTH:
-                                img = scaleToMaxSize(img, (DISPLAY_HEIGHT, DISPLAY_WIDTH))
+                                img = scaleToMaxSize(img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
                             cv2.imshow("viewer", img)
                             key = cv2.waitKey(1)
@@ -119,9 +108,7 @@ class Viewer:
                             self.file_idx = 0
             else:
                 self.plus_idx()
-                self.ts = time.time()
-
-        cv2.destroyAllWindows()  
+                self.ts = time.time() 
 
 if __name__ == "__main__":
     viewer = Viewer()
