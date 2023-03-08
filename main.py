@@ -15,13 +15,13 @@ else:
     PATH = "images"
     DISPLAY_WIDTH, DISPLAY_HEIGHT = 1280, 720
 
-def scaleToMaxSize(src_img, dst_size):
+def scale_img(src_img, dst_size):
     img_h, img_w, elem_h, elem_w = src_img.shape[0], src_img.shape[1], dst_size[1], dst_size[0] # extract dimensions
     img_r, elem_r = img_w/img_h, elem_w/elem_h # calculate ratios
     if img_r == elem_r: # if ratio is same
         dst_img = cv2.resize(src_img, (elem_w, elem_h)) # resize
     else:
-        if img_h > img_w:
+        if img_r < elem_r:
             adjusted_width = int(elem_h*(img_w/img_h))
             dst_img = cv2.resize(src_img, (adjusted_width, elem_h)) # resize to maximum width and adjusted height
         else:
@@ -31,7 +31,7 @@ def scaleToMaxSize(src_img, dst_size):
     height = (dst_size[1]-dst_img.shape[0])//2 if (dst_size[1]-dst_img.shape[0])//2 > 0 else 0 # calculate height of border
     width = (dst_size[0]-dst_img.shape[1])//2 if (dst_size[0]-dst_img.shape[1])//2 > 0 else 0 # calculate width of border
     dst_img = cv2.copyMakeBorder(dst_img, height, height, width, width, cv2.BORDER_CONSTANT, None, value=0) # add border to image
-        
+    
     return dst_img
 
 class Viewer:
@@ -97,7 +97,7 @@ class Viewer:
                             img = cv2.imread(file, cv2.IMREAD_COLOR) # read image
 
                             if img.shape[0]!= DISPLAY_HEIGHT or img.shape[1]!= DISPLAY_WIDTH:
-                                img = scaleToMaxSize(img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
+                                img = scale_img(img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
 
                             cv2.imshow("viewer", img)
                             key = cv2.waitKey(1)
