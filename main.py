@@ -3,7 +3,7 @@ import os
 import time
 
 # supported file formats
-IMG_FE = (".jpg", ".png", ".bmp", ".jpeg")
+IMG_FE = (".jpg", ".png", ".bmp", ".jpeg", ".JPG", ".PNG", ".BMP", ".JPEG")
 # TIMEOUT
 T_OUT = 60
 
